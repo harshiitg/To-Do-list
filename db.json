@@ -7,26 +7,26 @@
       "reminder": true
     },
     {
-      "text": "Meeting with Amit",
-      "day": "10th June 2pm",
+      "text": "a",
+      "day": "aa",
       "reminder": true,
-      "id": 4
-    },
-    {
-      "text": "Meeting with Vineet",
-      "day": "10th June",
-      "reminder": true,
-      "id": 5
+      "id": 2
     },
     {
       "text": "a",
-      "day": "1",
+      "day": "a",
+      "reminder": true,
+      "id": 3
+    },
+    {
+      "text": "a",
+      "day": "12",
       "reminder": true,
       "id": 6
     },
     {
-      "text": "f",
-      "day": "",
+      "text": "a",
+      "day": "0",
       "reminder": false,
       "id": 7
     }

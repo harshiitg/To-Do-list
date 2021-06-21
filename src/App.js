@@ -4,6 +4,12 @@ import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
 import Footer from './components/Footer'
+import {useQuery} from 'react-query'
+import {QueryClientProvider, QueryClient} from 'react-query'
+
+
+const queryClient = new QueryClient()
+
 
 
 
@@ -12,23 +18,14 @@ const App = () => {
   const [showAddTask, setShowAddTask] =useState(false)
   const [tasks, setTasks]= useState([])
 
-  useEffect(() => {
-    const getTasks = async () => {
-      const tasksFromServer = await fetchTasks()
-      setTasks(tasksFromServer)
-    }
-
-    
-    getTasks()
-  }, [])
-
   //Fetch Tasks
 const fetchTasks= async () =>{
-      const res=  await fetch ('http://localhost:5000/tasks')
+      const res= await fetch ('http://localhost:5000/tasks')
        const data= await res.json()
   
        return data
 }
+
 //Fetch Task
 const fetchTask= async (id) =>{
       const res=  await fetch(`http://
@@ -38,6 +35,24 @@ const fetchTask= async (id) =>{
        return data
 }
 
+
+  const {data, status} =useQuery('posts',fetchTasks,{onSuccess: (data)=>{
+    setTasks(data)
+    console.log("here on success")
+  }});
+
+
+  useEffect(() => {
+    const getTasks = async () => {
+      const tasksFromServer = await fetchTasks()
+      setTasks(tasksFromServer)
+    }
+    getTasks()
+  }, [])
+
+
+ 
+ 
 
   // Add Task
   const addTask = async(task) => {
@@ -62,14 +77,15 @@ const fetchTask= async (id) =>{
   // Delete Task
   const deleteTask = async(id) => {
    await fetch(`http://localhost:5000/tasks/${id}`,
-    {method: 'DELETE',})
+    {method: 'DELETE',
+  }) 
 
    setTasks(tasks.filter((task)=> task.id !==
    id))
   }
   
   //Toggle reminder
-  const toggleReminder = async(id) => {
+  const toggleReminder = async(id) => { 
    const taskToToggle = await fetchTask(id)
    const updTask = {...taskToToggle, 
    reminder: !taskToToggle.reminder}
@@ -87,12 +103,14 @@ const fetchTask= async (id) =>{
    const data= await res.json()
 
     setTasks
-    (tasks.map((task) => task.id ===id
-    ? { ...task, reminder: !task.reminder}: task)) 
+    (tasks.map((task) => task.id === id
+    ? { ...task, reminder: !data.reminder}: task)) 
   } 
 
 
   return(
+    <QueryClientProvider client={queryClient} contextSharing= {true}>
+
     <Router>
     <div className= 'container'>
       <Header onAdd = {() => setShowAddTask(!showAddTask)}
@@ -106,11 +124,11 @@ const fetchTask= async (id) =>{
       ): (
         'No Tasks to show'
       )}
-      
-      
       <Footer />
     </div>
     </Router>
+    </QueryClientProvider>
+
   ) 
 }
   
